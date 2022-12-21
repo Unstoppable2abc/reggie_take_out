@@ -49,6 +49,15 @@ public class DishController {
     @PostMapping
     public R<String> save(@RequestBody DishDto dishDto){
         log.info(dishDto.toString());
+
+        //清理所有redis缓存
+        //Set keys = redisTemplate.keys("dish*");
+        //redisTemplate.delete(keys);
+
+        //精确清理某个人类下面的菜品缓存数据
+        String key = "dish"+dishDto.getCategoryId()+"_"+dishDto.getStatus();
+        redisTemplate.delete(key);
+
         dishService.saveWithFlavor(dishDto);
         return R.success("新增菜品成功");
     }
@@ -124,9 +133,13 @@ public class DishController {
      */
     @PutMapping
     public R<String> update(@RequestBody DishDto dishDto){
-        //清理redis缓存
-        Set keys = redisTemplate.keys("dish_*");
-        redisTemplate.delete(keys);
+        //清理所有redis缓存
+        //Set keys = redisTemplate.keys("dish*");
+        //redisTemplate.delete(keys);
+
+        //精确清理某个人类下面的菜品缓存数据
+        String key = "dish"+dishDto.getCategoryId()+"_"+dishDto.getStatus();
+        redisTemplate.delete(key);
 
         log.info(dishDto.toString());
         dishService.updateWithFlavor(dishDto);
@@ -143,7 +156,7 @@ public class DishController {
         List<DishDto> dishDtoList = null;
 
         //先从redis中获取数据
-        String key = "list_"+dish.getCategoryId()+"_"+dish.getStatus(); //dish_12345678_1
+        String key = "dish"+dish.getCategoryId()+"_"+dish.getStatus(); //dish_12345678_1
         dishDtoList = (List<DishDto>) redisTemplate.opsForValue().get(key);
 
         //如果存在，直接返回，无需查询数据库
