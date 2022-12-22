@@ -54,7 +54,7 @@ public class DishController {
         //Set keys = redisTemplate.keys("dish*");
         //redisTemplate.delete(keys);
 
-        //精确清理某个人类下面的菜品缓存数据
+        //精确清理某个类下面的菜品缓存数据
         String key = "dish"+dishDto.getCategoryId()+"_"+dishDto.getStatus();
         redisTemplate.delete(key);
 
@@ -137,7 +137,7 @@ public class DishController {
         //Set keys = redisTemplate.keys("dish*");
         //redisTemplate.delete(keys);
 
-        //精确清理某个人类下面的菜品缓存数据
+        //精确清理某个类下面的菜品缓存数据
         String key = "dish"+dishDto.getCategoryId()+"_"+dishDto.getStatus();
         redisTemplate.delete(key);
 
